@@ -1,5 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+// Require  routes
+const studentroutes= require('./src/routes/student.route')
+const enseignantRoute= require('./src/routes/enseignantRoute')
+
 
 // create express app
 const app = express();
@@ -14,16 +18,11 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // parse requests of content-type - application/json
 app.use(bodyParser.json())
 
-// define a root route
-app.get('/', (req, res) => {
-  res.send("Hello World");
-});
-
-// Require employee routes
-const studentroutes= require('./src/routes/student.route')
 
 // using as middleware
-app.use('/api/v1/student',studentroutes)
+app.use(studentroutes)
+app.use(enseignantRoute)
+
 
 // listen for requests
 app.listen(port, hostname, () => {

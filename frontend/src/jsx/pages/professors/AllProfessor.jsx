@@ -1,57 +1,50 @@
 import React, {useState, useRef, useEffect} from 'react';
 import { Dropdown, Row, Nav, Tab } from 'react-bootstrap';
 import {Link} from 'react-router-dom';
+import axios from 'axios';
 
 import PageTitle from '../../layouts/PageTitle';
 import { IMAGES } from '../../constant/theme';
 import {gridDataBlog} from '../staff/GridData';
 
-const holidayTable = [
-    { id:1, name:'Garrett Winters', profile:IMAGES.smallpic1,department:'Accountant',  gender:'Female',  education:'B.A, B.C.A', mobile:'987 654 3210', email:'info@example.com',  join:'2020/07/25' },
-    { id:10, name:'Airi Satou', profile:IMAGES.smallpic2,department:'Junior Technical',   gender:'Female', education:'B.A, B.C.A', mobile:'987 654 3210', email:'info@example.com',  join:'2021/11/28' },
-    { id:3, name:'Tiger Nixon', profile:IMAGES.smallpic3, department:'Clerk', gender:'Female',  education:'B.Sc', mobile:'123 456 7890', email:'info@example.com',  join:'2019/04/25' },
-    { id:4, name:'Cedric Kelly', profile:IMAGES.smallpic4, department:'Developer',  gender:'Female', education:'BTech', mobile:'123 456 7890', email:'info@example.com',  join:'2018/04/25' },
-    { id:2, name:'Gavin Joyce', profile:IMAGES.smallpic5,department:'Specialist',   gender:'Female', education:'B.Com, M.Com', mobile:'(123) 4567 890', email:'info@example.com',  join:'2020/04/25' },
-    { id:9, name:'Angelica Ramos', profile:IMAGES.smallpic6, department:'Executive Officer',  gender:'Male', education:'BTech, MTech', mobile:'987 654 3210', email:'info@example.com',  join:'2015/08/25' },
-    { id:7, name:'Paul Byrd', profile:IMAGES.smallpic7, department:'Financial Officer', gender:'Female',  education:'B.Sc, M.Sc', mobile:'987 654 3210', email:'info@example.com',  join:'2023/09/01' },
-    { id:8, name:'Ashton Cox', profile:IMAGES.smallpic8, department:'Junior Technical',  gender:'Female', education:'BTech', mobile:'(123) 4567 890', email:'info@example.com',  join:'2015/02/22' },
-    { id:6, name:'Rhona Davidson', profile:IMAGES.smallpic9, department:'Sales Assistant',  gender:'Female', education:'B.Sc', mobile:'(123) 4567 890', email:'info@example.com',  join:'2018/06/12' },
-    { id:5, name:'Colleen Hurst', profile:IMAGES.smallpic10, department:'Librarian', gender:'Female',  education:'B.Com, M.Com', mobile:'(123) 4567 890', email:'info@example.com',  join:'2021/11/19' },
-    { id:11, name:'Tiger Nixon', profile:IMAGES.smallpic3,  department:'Specialist',  gender:'Female', education:'B.Sc', mobile:'123 456 7890', email:'info@example.com',  join:'2019/04/25' },
-    { id:12, name:'Cedric Kelly', profile:IMAGES.smallpic4, department:'Executive Officer', gender:'Female',  education:'BTech', mobile:'123 456 7890', email:'info@example.com',  join:'2018/04/25' },
-    { id:13, name:'Gavin Joyce', profile:IMAGES.smallpic5, department:'Financial Officer', gender:'Female',  education:'B.Com, M.Com', mobile:'(123) 4567 890', email:'info@example.com',  join:'2020/04/25' },
-    { id:14, name:'Angelica Ramos', profile:IMAGES.smallpic6, department:'Junior Technical',  gender:'Female', education:'BTech, MTech', mobile:'987 654 3210', email:'info@example.com',  join:'2015/08/25' },
-    { id:15, name:'Paul Byrd', profile:IMAGES.smallpic7, department:'Sales Assistant', gender:'Male',  education:'B.Sc, M.Sc', mobile:'987 654 3210', email:'info@example.com',  join:'2023/09/01' },
-    { id:16, name:'Ashton Cox', profile:IMAGES.smallpic8, department:'Specialist', education:'BTech', gender:'Female', mobile:'(123) 4567 890', email:'info@example.com',  join:'2015/02/22' },
-    { id:17, name:'Rhona Davidson', profile:IMAGES.smallpic9, department:'Executive Officer', education:'B.Sc', gender:'Female', mobile:'(123) 4567 890', email:'info@example.com',  join:'2018/06/12' },
-    
-];
-
-const theadData = [
-    {heading: 'Profile', sortingVale:"profile"},
-    {heading: 'Name', sortingVale:"name"},    
-    {heading: 'Department', sortingVale:"department"},
-    {heading: 'Gender', sortingVale:"gender"},
-    {heading: 'Education', sortingVale:"education"},
-    {heading: 'Mobile', sortingVale:"mobile"},
-    {heading: 'Email', sortingVale:"email"},
-    {heading: 'Joining Date', sortingVale:"join"},
-    {heading: 'Action', sortingVale:"action"}
-];
 
 
 const AllProfessor = () => {
-    const [sort, setSortata] = useState(10);
-    const [data, setData] = useState(
-        document.querySelectorAll('#holidayList tbody tr')
-    )
-    
-    const activePag = useRef(0)
-    const [test, settest] = useState(0)    
-    
-    const chageData = (frist, sec) => {
+    const [sort, setSortData] = useState(10);
+    const [data, setData] = useState([]);
+    const [professors, setProfessers] = useState([]);    
+    const activePag = useRef(0);
+    const [test, setTest] = useState(0) ;
+    const [iconData, setIconData] = useState({ complete: false, ind: -1 });   
+
+    const theadData = [
+        { heading: 'Profil', sortingValue: "profile" },
+        { heading: 'Nom', sortingValue: "nom" },    
+        { heading: 'Région', sortingValue: "region" }, 
+        { heading: 'Sexe', sortingValue: "sexe" },   
+        { heading: 'Diplôme', sortingValue: "education" },
+        { heading: 'Date de nomination', sortingValue: "join" },
+        { heading: 'Numéro de téléphone', sortingValue: "mobile" },
+        { heading: 'Email', sortingValue: "email" },
+        { heading: 'Action', sortingValue: "action" }
+    ];
+  
+        //getAllProfessor
+        React.useEffect(() => {
+            axios.get(`http://127.0.1.1:5000/getAllEns`)
+            .then((response) => {
+                console.log("🚀 ~ .then ~ response:", response)
+                setProfessers(response.data);
+                console.log("Fetched Professors:", response.data);
+            })
+            .catch((error) => {
+                console.log("Error fetching data:", error);
+            });
+        }, []);
+
+    const chargeData = (first, sec) => {
         for (var i = 0; i < data.length; ++i) {
-          if (i >= frist && i < sec) {
+          if (i >= first && i < sec) {
             data[i].classList.remove('d-none')
           } else {
             data[i].classList.add('d-none')
@@ -64,7 +57,7 @@ const AllProfessor = () => {
     }, [test])
     
       
-    activePag.current === 0 && chageData(0, sort)
+    activePag.current === 0 && chargeData(0, sort)
 
     let paggination = Array(Math.ceil(data.length / sort))
         .fill()
@@ -73,66 +66,52 @@ const AllProfessor = () => {
       
     const onClick = (i) => {
         activePag.current = i
-        chageData(activePag.current * sort, (activePag.current + 1) * sort)
-        settest(i)
+        chargeData(activePag.current * sort, (activePag.current + 1) * sort)
+        setTest(i)
     }
-      
-    const [feeData, setFeeDate] = useState([...holidayTable]);
-    const [iconData, setIconDate] = useState({ complete: false ,ind : Number});
 
-
-    function SotingData(name){
-        const sortedPeople = [...feeData]; 
-        switch (name) {
-            case "rollno":
-                sortedPeople.sort((a, b) => {
-                return   a.rollno < b.rollno ? -1 : 1 });
-            break;
+    function SortingData(nom){
+        const sortedProfessors = [...professors]; 
+        switch (nom) {
+            case "profile":
+                sortedProfessors.sort((a, b) => a.profile.localeCompare(b.profile));
+                break;
             case "name":
-                sortedPeople.sort((a, b) => {                    
-                 return  iconData.complete ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)                    
-                });
-            break;            
-            case "department":
-                sortedPeople.sort((a, b) => {                    
-                 return  iconData.complete ? a.department.localeCompare(b.department) : b.department.localeCompare(a.department)                    
-                });
-            break;            
-            case "gender":
-                sortedPeople.sort((a, b) => {                    
-                 return  iconData.complete ? a.gender.localeCompare(b.gender) : b.gender.localeCompare(a.gender)                    
-                });
-            break;            
+                sortedProfessors.sort((a, b) => a.name.localeCompare(b.name));
+                break;
+            case "region":
+                sortedProfessors.sort((a, b) => a.department.localeCompare(b.department));
+                break;
+            case "sexe":
+                sortedProfessors.sort((a, b) => a.sexe.localeCompare(b.sexe));
+                break;
             case "education":
-                sortedPeople.sort((a, b) => {                    
-                    return  iconData.complete ? a.education.localeCompare(b.education) : b.education.localeCompare(a.education)                    
-                });
-            break;        
-            case "mobile":
-                sortedPeople.sort((a, b) => {                    
-                    return  iconData.complete ? a.mobile.localeCompare(b.mobile) : b.mobile.localeCompare(a.mobile)                    
-                });
-            break;        
+                sortedProfessors.sort((a, b) => a.education.localeCompare(b.education));
+                break;
             case "join":
-                sortedPeople.sort((a, b) => {                    
-                    return  iconData.complete ? a.join.localeCompare(b.join) : b.join.localeCompare(a.join)                    
-                });
-            break;        
+                sortedProfessors.sort((a, b) => a.join.localeCompare(b.join));
+                break;
+            case "mobile":
+                sortedProfessors.sort((a, b) => a.mobile.localeCompare(b.mobile));
+                break;
+            case "email":
+                sortedProfessors.sort((a, b) => a.email.localeCompare(b.email));
+                break;
             default:
                 break;
         }            
-        setFeeDate(sortedPeople);         
+        setProfessers(sortedProfessors);         
     }    
     function DataSearch(e){  
-        const updatesDate =  holidayTable.filter(item =>{            
-            let selectdata = `${item.name} ${item.department} ${item.gender} ${item.join} ${item.education} ${item.mobile}`.toLowerCase();                          
+        const updatesDate =  professors.filter(item =>{            
+            let selectdata = `${item.nom} ${item.department} ${item.sexe} ${item.join} ${item.education} ${item.mobile}`.toLowerCase();                          
             return  selectdata.includes(e.target.value.toLowerCase())
         });        
-        setFeeDate([...updatesDate])        
+        setProfessers([...updatesDate])        
     }
     return (
         <>
-            <PageTitle activeMenu={"All Professors"} motherMenu={"Professors"}/>
+            <PageTitle activeMenu={"Tous les enseignants"} motherMenu={"Enseignants"}/>
             <Row>
                 <Tab.Container defaultActiveKey={"List"}>
                     <div className="col-lg-12">
@@ -146,8 +125,8 @@ const AllProfessor = () => {
 							<Tab.Pane eventKey="List" className="col-lg-12">
                                 <div className="card">
                                     <div className="card-header">
-                                        <h4 className="card-title">All Professors </h4>
-                                        <Link to={"/add-professor"} className="btn btn-primary">+ Add New</Link>
+                                        <h4 className="card-title">Tous les enseigants </h4>
+                                        <Link to={"/add-professor"} className="btn btn-primary">+ Ajouter un nouveau</Link>
                                     </div>
                                     <div className="card-body">
                                         <div className="table-responsive">
@@ -155,22 +134,22 @@ const AllProfessor = () => {
                                                 <div className='justify-content-between d-sm-flex'>                                    
                                                     <div className='dataTables_length'>
                                                         <label className='d-flex align-items-center'>
-                                                            Show
+                                                            Afficher
                                                             <Dropdown className='search-drop'>
                                                                 <Dropdown.Toggle as="div" className="search-drop-btn">
                                                                     {sort}
                                                                 </Dropdown.Toggle>
                                                                 <Dropdown.Menu>
-                                                                    <Dropdown.Item onClick={()=>setSortata('10')}>10</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={()=>setSortata('20')}>20</Dropdown.Item>
-                                                                    <Dropdown.Item onClick={()=>setSortata('30')}>30</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={()=>setSortData('10')}>10</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={()=>setSortData('20')}>20</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={()=>setSortData('30')}>30</Dropdown.Item>
                                                                 </Dropdown.Menu>
                                                             </Dropdown>
-                                                            entries
+                                                            entrées
                                                         </label>
                                                     </div>
                                                     <div className="dataTables_filter">
-                                                        <label>Search : <input type="search" className="" placeholder="" 
+                                                        <label>Chercher : <input type="search" className="" placeholder="" 
                                                                 onChange={DataSearch}
                                                             />
                                                         </label>
@@ -181,7 +160,7 @@ const AllProfessor = () => {
                                                         <tr>                                                
                                                             {theadData.map((item, ind)=>(
                                                                 <th key={ind}
-                                                                    onClick={()=>{SotingData(item.sortingVale); setIconDate(prevState => ({complete:!prevState.complete, ind: ind }) )}}
+                                                                    onClick={()=>{SortingData(item.sortingVale); setIconData(prevState => ({complete:!prevState.complete, ind: ind }) )}}
                                                                 >{item.heading}
                                                                     <span>
                                                                         {ind !== iconData.ind &&
@@ -200,16 +179,16 @@ const AllProfessor = () => {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {feeData.map((data, ind)=>(
+                                                        {professors.map((data, ind)=>(
                                                             <tr key={ind}>
                                                                 <td><img className="rounded-circle" width="35" src={data.profile} alt="" /> </td>                                                                                                                       
-                                                                <td>{data.name}</td>                                                    
-                                                                <td>{data.department}</td>                                                    
-                                                                <td>{data.gender}</td>                                                    
-                                                                <td>{data.education}</td>                                                  
+                                                                <td>{data.nom}</td>                                                    
+                                                                <td>{data.region}</td>                                                    
+                                                                <td>{data.sexe}</td>                                                    
+                                                                <td>{data.diplome}</td>
+                                                                <td>{data.nomination}</td>                                                                                                                                                  
                                                                 <td><Link to={"#"}><strong>{data.mobile}</strong></Link></td>
                                                                 <td><Link to={"#"}><strong>{data.email}</strong></Link></td>
-                                                                <td>{data.join}</td>                                                    
                                                                 <td>
                                                                     <Link to={"#"} className="btn btn-xs sharp btn-primary me-1"><i className="fa fa-pencil" /></Link>
                                                                     <Link to={"#"} className="btn btn-xs sharp btn-danger"><i className="fa fa-trash" /></Link>
@@ -220,11 +199,11 @@ const AllProfessor = () => {
                                                 </table>
                                                 <div className='d-sm-flex text-center justify-content-between align-items-center mt-3'>
                                                     <div className='dataTables_info'>
-                                                        Showing {activePag.current * sort + 1} to{' '}
+                                                    Affichage de {activePag.current * sort + 1} à{' '}
                                                         {data.length > (activePag.current + 1) * sort
                                                             ? (activePag.current + 1) * sort
                                                             : data.length}{' '}
-                                                        of {data.length} entries
+                                                        sur {data.length}  entrées
                                                     </div>
                                                     <div
                                                         className='dataTables_paginate paging_simple_numbers'
@@ -237,7 +216,7 @@ const AllProfessor = () => {
                                                                 activePag.current > 0 && onClick(activePag.current - 1)
                                                             }
                                                         >                                                
-                                                            Previous
+                                                            Précédent
                                                         </Link>
                                                         <span>
                                                             {paggination.map((number, i) => (
@@ -261,7 +240,7 @@ const AllProfessor = () => {
                                                                 onClick(activePag.current + 1)
                                                             }
                                                         >                                                
-                                                            Next
+                                                            Suivant
                                                         </Link>
                                                     </div>
                                                 </div>
@@ -282,8 +261,8 @@ const AllProfessor = () => {
                                                         </Dropdown.Toggle>
                                                         <Dropdown.Menu align="end" className="dropdown-menu dropdown-menu-right border py-0">
                                                             <div className="py-2">
-                                                                <Link to={"#"} className="dropdown-item">Edit</Link>
-                                                                <Link to={"#"} className="dropdown-item text-danger">Delete</Link>
+                                                                <Link to={"#"} className="dropdown-item">Modifier</Link>
+                                                                <Link to={"#"} className="dropdown-item text-danger">Supprimer</Link>
                                                             </div>
                                                         </Dropdown.Menu>
                                                     </Dropdown>
@@ -293,7 +272,7 @@ const AllProfessor = () => {
                                                         <div className="profile-photo">
                                                             <img src={item.image} width="100" className="img-fluid rounded-circle" alt="" />
                                                         </div>
-                                                        <h3 className="mt-4 mb-1">{item.name}</h3>
+                                                        <h3 className="mt-4 mb-1">{item.nom}</h3>
                                                         <p className="text-muted">{item.subject}</p>
                                                         <ul className="list-group mb-3 list-group-flush">
                                                             {item.content.map((data, ind)=>(

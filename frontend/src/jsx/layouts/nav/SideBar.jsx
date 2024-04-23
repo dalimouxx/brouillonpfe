@@ -165,10 +165,8 @@ const SideBar = () => {
               })}          
           </ul>	
           <div className="copyright">
-            <p>Edumin Saas Admin © {dat.getFullYear()} All Rights Reserved</p>
-            <p className="fs-12">Made with <span className="heart"
-              onClick={(e)=>e.target.classList.toggle('heart-blast')}
-            ></span> by DexignLab</p>
+            <p>PFE © {dat.getFullYear()} Tous droits réservés</p>
+            <p className="fs-12">Par Tayssir et Mohamed Ali </p>
           </div>
       </div>
     </div>

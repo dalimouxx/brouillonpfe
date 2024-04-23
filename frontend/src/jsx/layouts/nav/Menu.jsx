@@ -7,7 +7,7 @@ export const MenuList = [
     },
     //Dashboard
     {
-        title: 'Dashboard',	
+        title: 'Accueil',	
         classsChange: 'mm-collapse',		
         iconStyle: <i className="la la-home" />,
         content: [
@@ -30,7 +30,7 @@ export const MenuList = [
 
     //Management
     {
-        title: 'Event Management',	        
+        title: "Gestion d'événements",	        
         to:"event-management",
         iconStyle: <i className="la la-calendar" />,        
     },
@@ -38,24 +38,24 @@ export const MenuList = [
 
     //Professors    
     {
-        title: 'Professors',	
+        title: 'Enseignants',	
         classsChange: 'mm-collapse',		
         iconStyle: <i className="la la-user" />,
         content: [
             {
-                title: 'All Professor',
+                title: 'Tous les enseignants',
                 to: 'all-professors',					
             },
             {
-                title: 'Add Professor',
+                title: 'Ajouter un enseignant',
                 to: 'add-professor',
             },
             {
-                title: 'Edit Professor',
+                title: 'Modifier un enseignant',
                 to: 'edit-professor',
             },
             {
-                title: 'Professor Profile',
+                title: "Profil de l'enseignant",
                 to: 'professor-profile',
             },
            
@@ -63,24 +63,24 @@ export const MenuList = [
     },
     //Student    
     {
-        title: 'Students',	
+        title: 'Élèves',	
         classsChange: 'mm-collapse',		
         iconStyle: <i className="la la-users" />,
         content: [
             {
-                title: 'All Students',
+                title: 'Tous les élèves',
                 to: 'all-students',					
             },
             {
-                title: 'Add Students',
+                title: 'Ajouter un élève',
                 to: 'add-student',
             },
             {
-                title: 'Edit Students',
+                title: 'Modifier un élève',
                 to: 'edit-student',
             },
             {
-                title: 'About Students',
+                title: 'À propos des élèves',
                 to: 'about-student',
             },
            
